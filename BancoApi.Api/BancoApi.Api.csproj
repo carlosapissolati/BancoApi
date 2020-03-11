@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="7.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BancoApi.Domain\BancoApi.Domain.csproj" />
+    <ProjectReference Include="..\BancoApi.Infra\BancoApi.Infra.csproj" />
+  </ItemGroup>
+
+
+
+</Project>
