@@ -27,5 +27,9 @@ namespace BancoApi.Api.Models
         public string Email { get; set; }
         public IEnumerable<EnderecoViewModel> Endereco { get; set; }
 
+        public ContaViewModel ContaPoupanca { get; set; }
+
+        public ContaViewModel ContaCorrente { get; set; }
+
     }
 }

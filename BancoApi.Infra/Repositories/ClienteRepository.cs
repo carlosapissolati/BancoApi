@@ -34,7 +34,8 @@ namespace BancoApi.Infra.Repositories
             var result = _context.Connection.QueryMultiple(query, new { id });
 
             Cliente cliente = result.Read<Cliente>().Single();
-            cliente.Endereco = result.Read<Endereco>().ToList();
+            if (result.Read<Endereco>().Count() > 0)
+                cliente.Endereco = result.Read<Endereco>().ToList();
 
             return cliente;
         }
@@ -67,6 +68,37 @@ namespace BancoApi.Infra.Repositories
             .Query<bool>("SELECT CASE WHEN EXISTS (SELECT [Id] FROM Cliente WHERE [Email] = @email) THEN CAST(1 AS BIT) ELSE CAST(0 AS BIT) END as retorno"
             , new { email = email }).
             FirstOrDefault();
+        }
+
+        public Cliente BuscarClientePorIdContaPoupanca(int id)
+        {
+            var query = @"
+                SELECT * FROM Cliente WHERE ID = @Id
+                SELECT * FROM ContaPoupanca WHERE IdCliente = @Id
+                ";
+            var result = _context.Connection.QueryMultiple(query, new { id });
+
+            Cliente cliente = result.Read<Cliente>().Single();
+            if (result.Read<ContaPoupanca>().Count() > 0  )
+                cliente.ContaPoupanca = result.Read<ContaPoupanca>().Single();
+
+            return cliente;
+        }
+
+        public Cliente BuscarClientePorIdContaCorrente(int id)
+        {
+            var query = @"
+                SELECT * FROM Cliente WHERE ID = @Id
+                SELECT * FROM ContaCorrente WHERE IdCliente = @Id
+                ";
+            var result = _context.Connection.QueryMultiple(query, new { id });
+
+            Cliente cliente = result.Read<Cliente>().Single();
+
+            if (result.Read<ContaCorrente>().Count() > 0)
+                cliente.ContaCorrente = result.Read<ContaCorrente>().Single();
+
+            return cliente;
         }
     }
 }

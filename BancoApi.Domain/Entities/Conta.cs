@@ -6,7 +6,7 @@ namespace BancoApi.Domain.Entities
 {
     public abstract class Conta
     {
-        public int Numero { get; set; }
+        public int Id { get; set; }
         public double Saldo { get; protected set; }
         public Cliente Titular { get; set; }
         public abstract bool Saca(double saque);

@@ -8,5 +8,7 @@ namespace BancoApi.Domain.Interfaces
     public interface IEnderecoService
     {
         public bool Adicionar(Endereco endereco);
+
+    
     }
 }

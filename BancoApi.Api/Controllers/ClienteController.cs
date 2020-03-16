@@ -62,6 +62,30 @@ namespace BancoApi.Api.Controllers
             return Ok(clienteViewModel);
         }
 
+        [HttpGet]
+        [Route("{id:int}/contacorrente")]
+        public ActionResult<ClienteViewModel> BuscarClientePorIdContaCorrente(int id)
+        {
+            Cliente clientes = _clienteRepository.BuscarClientePorIdContaCorrente(id);
+            if (clientes == null)
+                return NotFound();
+
+            var clienteViewModel = _mapper.Map<ClienteViewModel>(clientes);
+            return Ok(clienteViewModel);
+        }
+
+        [HttpGet]
+        [Route("{id:int}/contapoupanca")]
+        public ActionResult<ClienteViewModel> BuscarClientePorIdContaPoupanca(int id)
+        {
+            Cliente clientes = _clienteRepository.BuscarClientePorIdContaPoupanca(id);
+            if (clientes == null)
+                return NotFound();
+
+            var clienteViewModel = _mapper.Map<ClienteViewModel>(clientes);
+            return Ok(clienteViewModel);
+        }
+
         [HttpPost]
         public ActionResult<ClienteViewModel> Adicionar([FromBody] ClienteViewModel clienteViewModel)
         {
