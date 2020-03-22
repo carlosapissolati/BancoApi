@@ -15,6 +15,7 @@ namespace BancoApi.Api.AutoMapper
             CreateMap<Cliente, ClienteViewModel>().ReverseMap();
             CreateMap<Endereco, EnderecoViewModel>().ReverseMap();
             CreateMap<ContaCorrente, ContaViewModel > ().ReverseMap();
+            CreateMap<Usuario, UsuarioViewModel>().ReverseMap();
         }
 
     }

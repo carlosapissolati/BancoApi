@@ -3,11 +3,13 @@ using BancoApi.Api.Models;
 using BancoApi.Domain.Entities;
 using BancoApi.Domain.Interfaces;
 using BancoApi.Domain.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 
 namespace BancoApi.Api.Controllers
 {
+    [Authorize]
     [Route("Endereco")]
     public class EnderecoController : Controller
     {

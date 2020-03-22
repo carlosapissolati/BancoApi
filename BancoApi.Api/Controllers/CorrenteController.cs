@@ -4,6 +4,7 @@ using BancoApi.Api.Models;
 using BancoApi.Domain.Entities;
 using BancoApi.Domain.Interfaces;
 using BancoApi.Domain.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace BancoApi.Api.Controllers
 {
+    [Authorize]
     [Route("ContaCorrente")]
     public class CorrenteController : Controller
     {

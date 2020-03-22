@@ -1,28 +1,42 @@
 using AutoMapper;
+using BancoApi.Api.Services;
 using BancoApi.Domain.Interfaces;
 using BancoApi.Domain.Notificacoes;
 using BancoApi.Domain.Repository;
 using BancoApi.Domain.Services;
 using BancoApi.Infra.Context;
 using BancoApi.Infra.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace BancoApi.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
+        //public Startup(IConfiguration configuration)
+        //{
+        //    Configuration = configuration;
+        //}
 
         public IConfiguration Configuration { get; }
 
+        public Startup(IWebHostEnvironment hostEnvironment)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(hostEnvironment.ContentRootPath)
+                .AddJsonFile("appsettings.json", true, true)
+                //.AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true, true)
+                .AddEnvironmentVariables();
+
+            Configuration = builder.Build();
+        }
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -35,6 +49,7 @@ namespace BancoApi.Api
 
 
             services.AddAutoMapper(typeof(Startup));
+            services.AddSingleton<IConfiguration>(Configuration);
 
             services.AddScoped<BancoContext, BancoContext>();
             services.AddScoped<INotificador, Notificador>();
@@ -47,6 +62,32 @@ namespace BancoApi.Api
 
             services.AddTransient<IEnderecoRepository, EnderecoRepository>();
             services.AddTransient<IEnderecoService, EnderecoService>();
+
+            services.AddTransient<IUsuarioRepository, UsuarioRepository>();
+            services.AddTransient<IUsuarioService, UsuarioService>();
+            services.AddTransient<TokenService, TokenService>();
+
+            //JWT
+
+            var keyString = Configuration.GetSection("Key:DefaultKey").Get<string>();
+            var key = Encoding.ASCII.GetBytes(keyString);
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = true;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
         }
 
 
@@ -64,6 +105,8 @@ namespace BancoApi.Api
             });
 
             app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

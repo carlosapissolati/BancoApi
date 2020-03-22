@@ -15,6 +15,10 @@ namespace BancoApi.Infra.Repositories
 
         private readonly BancoContext _context;
 
+        public ContaPoupancaRepository(BancoContext context)
+        {
+            _context = context;
+        }
 
         public void AlterarConta(ContaPoupanca contaPoupanca)
         {
